@@ -33,7 +33,6 @@ def main(img_dir, model_dir, weight):
 		w_set = int(h_set*im_w/im_h)
 		img_thres = thresholding(img, sat_thres=57, hue_low = 12, hue_high = 33,
 								 dilate_size= 7, open_size=3)
-		cv2.imwrite(f'Outputs/contour_{name}', img_thres)
 		bboxes, area = contour_box(img_thres, 64, 64, 0.1)
 		img_copy = img.copy()
 		seed_array = seed2array(img_copy, bboxes, size = 128)
@@ -79,14 +78,7 @@ def main(img_dir, model_dir, weight):
 				i += 1
 			else:
 				pass
-				# cv2.rectangle(img_copy, (x,y), (x+w, y+h), (0, 255 ,255), 2)
-				# for k, p_i in enumerate(p):
-				# 	cv2.putText(img_copy, '{:.2f}'.format(p_i),
-				# 		(x-10, y-30*k),
-				# 		color = (0, 255 ,255),
-				# 		fontFace = cv2.FONT_HERSHEY_SIMPLEX,
-				# 		fontScale = 1,
-				# 		thickness = 2)
+
 
 		string = f'''{name} All:{valid_box_count} pos:{(classes == 2).sum()}
 		neg:{(classes == 0).sum()}'''
