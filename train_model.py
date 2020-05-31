@@ -88,6 +88,9 @@ def main(seed_train_path):
 	score = model.evaluate(valid_set, verbose = 1)
 	print('Test loss:', score[0])
 	print('Test accuracy:', score[1])
+	if not os.path.exists('Model'):
+		os.makedirs('Model')
+	model.save('Model/trained_model.h5')
 
 
 if __name__ == '__main__':
