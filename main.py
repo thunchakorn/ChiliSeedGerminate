@@ -25,15 +25,13 @@ def main(img_dir, model_dir, weight):
 	germ_dict = {1:'neg', 2:'none', 3:'pos'}
 	print('for unsure seeds, please press key board to label each seed as follow:\n', germ_dict)
 	germ_dict = {0:'neg', 1:'none', 2:'pos'}
-	start = 0
 	img_gen = read_gen(img_dir)
-	j = start
 	for img, name in img_gen:
 		im_h, im_w, _ = img.shape
 		w_set = int(h_set*im_w/im_h)
 		img_thres = thresholding(img, sat_thres=57, hue_low = 12, hue_high = 33,
 								 dilate_size= 7, open_size=3)
-		bboxes, area = contour_box(img_thres, 64, 64, 0.1)
+		bboxes, area = find_bbox(img_thres, 64, 64, 0.1)
 		img_copy = img.copy()
 		seed_array = seed2array(img_copy, bboxes, size = 128)
 		model.predict(seed_array)

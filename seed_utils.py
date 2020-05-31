@@ -38,7 +38,7 @@ def sort_by_x(cnt):
     M = cv2.moments(cnt)
     return int(M['m10']/M['m00'])
 
-def contour_box(image_mask, box_w = 128, box_h = 128, min_area_prop = 0.4):
+def find_bbox(image_mask, box_w = 128, box_h = 128, min_area_prop = 0.4):
     img_mask = image_mask.copy()
     cnt, _ = cv2.findContours( img_mask,
                         cv2.RETR_EXTERNAL,
@@ -99,6 +99,29 @@ def prob_check(p, thres = 0.1):
         return True, dif
     else:
         return False, dif
+
+def check_overlap(bboxes, area, thres = 0.25):
+    over_lap_pair = []
+    w, h = bboxes[0][2], bboxes[0][3]
+    for pair in combinations(bboxes, r=2):
+        if doOverlap(pair[0], pair[1]):
+            if overlap_area(pair[0], pair[1]) < w*h*thres:
+                continue
+            area_1 = area[bboxes.index(pair[0])]
+            area_2 = area[bboxes.index(pair[1])]
+            if area_1 > area_2:
+                x, y = pair[0][0], pair[0][1]
+            else:
+                x, y = pair[1][0], pair[1][1]
+            bboxes.append([x,y,w,h])
+            over_lap_pair.append(pair[0])
+            over_lap_pair.append(pair[1])
+    for i in over_lap_pair:
+        try:
+            bboxes.pop(bboxes.index(i))
+        except:
+            continue
+    return bboxes
 
 def check_overlap_2(bboxes_o, area, classes, prob, thres = 0.25):
     overlap_pair = []
