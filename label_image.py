@@ -26,6 +26,7 @@ def main(img_dir):
         im_h, im_w, _ = img.shape
         w_set = int(h_set*im_w/im_h)
         img_thres = thresholding(img, sat_thres=57, hue_low = 12, hue_high = 33, dilate_size= 7, open_size=3)
+        cv2.imshow('mask', cv2.resize(img_thres, (w_set, h_set)))
         bboxes, area = find_bbox(img_thres, 64, 64, 0.1)
         bboxes = check_overlap(bboxes, area,thres = 0.2)
         img_copy = img.copy()
@@ -71,6 +72,8 @@ def main(img_dir):
                 cv2.imwrite(os.path.join(des_dir, 'pos','{0}_{1:03d}.png'.format(j,i)), img_crop)
                 i += 1
             elif key == 27:
+                break
+            elif key == ord('f'):
                 break
             else:
                 continue
